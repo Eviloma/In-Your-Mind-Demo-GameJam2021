@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -10,6 +11,13 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private float inputX;
     private GameObject playerSprite;
+
+    private Text interactiveText;
+    private Text interactiveFoundtext;
+
+    [SerializeField] private GameObject useKey;
+    [SerializeField] private GameObject interactiveTextObject;
+    [SerializeField] private GameObject interactiveFoundObject;
 
     [Range(1, 10)]
     [SerializeField] private float moveSpeed;
@@ -21,11 +29,31 @@ public class PlayerController : MonoBehaviour
         player = this.GetComponent<Rigidbody2D>();
         playerSprite = this.transform.GetChild(0).gameObject;
         anim = playerSprite.GetComponent<Animator>();
+        interactiveText = interactiveTextObject.transform.GetChild(0).GetComponent<Text>();
+        interactiveFoundtext = interactiveFoundObject.transform.GetChild(0).GetComponent<Text>();
     }
 
     private void FixedUpdate()
     {
         player.velocity = new Vector2(inputX * moveSpeed, player.velocity.y);
+    }
+
+    public void ChangeStatusInteractive(bool status)
+    {
+        useKey.SetActive(status);
+        interactiveTextObject.SetActive(status);
+    }
+    public void ChangeInteractiveText(string text)
+    {
+        interactiveText.text = text;
+    }
+
+    public IEnumerator InteractiveInfoText(string text)
+    {
+        interactiveFoundObject.SetActive(true);
+        interactiveFoundtext.text = text;
+        yield return new WaitForSeconds(2);
+        interactiveFoundObject.SetActive(false);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -40,9 +68,14 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && interactiveObject != null)
         {
+            ChangeStatusInteractive(false);
             if (interactiveObject.CompareTag("Door"))
             {
                 interactiveObject.GetComponent<Door>().Open();
+            }
+            else if (interactiveObject.CompareTag("Search"))
+            {
+                interactiveObject.GetComponent<SearchItem>().Search();
             }
         }
     }

@@ -9,18 +9,20 @@ public class Door : MonoBehaviour
     private CinemachineConfiner virtualCamera;
     private PlayerController playerController;
     private PlayerInput playerInput;
+    private PlayerInventory playerInventory;
     private Animator BlackScreen;
-
-    [SerializeField] private GameObject useKey;
     [SerializeField] private PolygonCollider2D roomTeleport;
     [SerializeField] private Vector3 teleportPosition = new Vector3(0,0,0);
-    [SerializeField] private bool isOpen;
+    [SerializeField] private int requireItem = -1;
+
+    [SerializeField] private string interactiveText;
 
     private void Start()
     {
         virtualCamera = GameObject.FindObjectOfType<CinemachineConfiner>();
         playerController = GameObject.FindObjectOfType<PlayerController>();
-        playerInput = GameObject.FindObjectOfType<PlayerInput>();
+        playerInventory = GameObject.FindGameObjectWithTag("InventorySystem").GetComponent<PlayerInventory>();
+        playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
         BlackScreen = GameObject.FindGameObjectWithTag("BlackScreen").GetComponent<Animator>();
     }
 
@@ -28,8 +30,9 @@ public class Door : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            useKey.SetActive(true);
+            playerController.ChangeStatusInteractive(true);
             playerController.interactiveObject = this.gameObject;
+            playerController.ChangeInteractiveText(interactiveText);
         }
     }
 
@@ -37,16 +40,20 @@ public class Door : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            useKey.SetActive(false);
+            playerController.ChangeStatusInteractive(false);
             playerController.interactiveObject = null;
         }
     }
 
     public void Open()
     {
-        if (isOpen)
+        if (requireItem == -1 || playerInventory.openStatus[requireItem] == 2)
         {
             StartCoroutine(Teleport());
+        }
+        else
+        {
+            StartCoroutine(playerController.InteractiveInfoText("Двері закриті на ключ"));
         }
         
     }
