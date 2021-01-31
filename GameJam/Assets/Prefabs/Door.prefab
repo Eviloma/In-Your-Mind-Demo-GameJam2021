@@ -96,10 +96,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d206ad5d59806a247b378514b32ff530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useKey: {fileID: 0}
   roomTeleport: {fileID: 0}
   teleportPosition: {x: 0, y: 0, z: 0}
-  isOpen: 1
+  requireItem: -1
+  interactiveText: 
+  openDoor: {fileID: 8300000, guid: 11f6eb89f328fe24b8c5e02551233599, type: 3}
+  closedDoor: {fileID: 8300000, guid: 23efc7771cde0bd428f1c3164e9056fe, type: 3}
 --- !u!61 &6309531897187585372
 BoxCollider2D:
   m_ObjectHideFlags: 0

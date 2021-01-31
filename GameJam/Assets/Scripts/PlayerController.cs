@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public GameObject interactiveObject;
 
+    public AudioClip foundItem;
+
     public void Start()
     {
         player = this.GetComponent<Rigidbody2D>();

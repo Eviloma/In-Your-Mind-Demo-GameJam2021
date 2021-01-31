@@ -11,11 +11,15 @@ public class Door : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerInventory playerInventory;
     private Animator BlackScreen;
+    private AudioSource sfx;
     [SerializeField] private PolygonCollider2D roomTeleport;
     [SerializeField] private Vector3 teleportPosition = new Vector3(0,0,0);
     [SerializeField] private int requireItem = -1;
 
     [SerializeField] private string interactiveText;
+    [Header("SFXs")]
+    [SerializeField] private AudioClip openDoor;
+    [SerializeField] private AudioClip closedDoor;
 
     private void Start()
     {
@@ -24,6 +28,7 @@ public class Door : MonoBehaviour
         playerInventory = GameObject.FindGameObjectWithTag("InventorySystem").GetComponent<PlayerInventory>();
         playerInput = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInput>();
         BlackScreen = GameObject.FindGameObjectWithTag("BlackScreen").GetComponent<Animator>();
+        sfx = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -49,13 +54,15 @@ public class Door : MonoBehaviour
     {
         if (requireItem == -1 || playerInventory.openStatus[requireItem] == 2)
         {
+            sfx.clip = openDoor;
             StartCoroutine(Teleport());
         }
         else
         {
+            sfx.clip = closedDoor;
             StartCoroutine(playerController.InteractiveInfoText("Двері закриті на ключ"));
         }
-        
+        sfx.Play();
     }
 
     private IEnumerator Teleport()

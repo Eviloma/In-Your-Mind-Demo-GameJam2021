@@ -8,6 +8,7 @@ TagManager:
   - BlackScreen
   - InventorySystem
   - Search
+  - SFX
   layers:
   - Default
   - TransparentFX

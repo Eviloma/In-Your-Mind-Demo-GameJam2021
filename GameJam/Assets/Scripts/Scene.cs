@@ -8,6 +8,7 @@ public class Scene : MonoBehaviour
 {
     [SerializeField] private Text sub;
     [SerializeField] private PlayerInput input;
+    [SerializeField] private AudioSource sfx;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -17,6 +18,7 @@ public class Scene : MonoBehaviour
 
     private IEnumerator StartScene()
     {
+        sfx.enabled = false;
         input.enabled = false;
         sub.gameObject.SetActive(true);
         sub.text = "";

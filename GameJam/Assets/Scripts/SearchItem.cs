@@ -7,15 +7,18 @@ public class SearchItem : MonoBehaviour
     private PlayerController playerController;
     private PlayerInventory playerInventory;
     [SerializeField] private string interactiveText;
+    private AudioSource sfx;
 
     [SerializeField] private int item = -1;
     [SerializeField] private int tip = -1;
     [SerializeField] private int requireItem = -1;
+    [SerializeField] private AudioClip audioClip;
 
     private void Start()
     {
         playerController = GameObject.FindObjectOfType<PlayerController>();
         playerInventory = GameObject.FindObjectOfType<PlayerInventory>();
+        sfx = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -41,6 +44,11 @@ public class SearchItem : MonoBehaviour
     {
         if(requireItem == -1 || playerInventory.openStatus[requireItem] == 2)
         {
+            if (audioClip != null)
+            {
+                sfx.clip = audioClip;
+                sfx.Play();
+            }
             if (item != -1 || tip != -1)
             {
                 if (item != -1)
@@ -50,6 +58,8 @@ public class SearchItem : MonoBehaviour
                 item = -1;
                 tip = -1;
                 StartCoroutine(playerController.InteractiveInfoText("Ви знайшли предмет/Підказку"));
+                sfx.clip = playerController.foundItem;
+                sfx.Play();
             }
             else
             {
